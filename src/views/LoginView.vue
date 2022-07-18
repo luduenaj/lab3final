@@ -1,12 +1,12 @@
 <template>
   <!--https://bootsnipp.com/snippets/7nk08-->
-   <div class="container">
+   <div class="container ">
     <div class="row">
-      <div class="col-6 bg shadow-sm p-3 mb-5 bg-body rounded"></div>
-      <div class="col-md-6">
+      <div class="col-6 bg shadow-sm p-3 mt-2 bg-body rounded d-none d-lg-block"></div>
+      <div class="col-lg-6">
         <div class="login-form fade-in-text">
           <form class="shadow p-3 mb-5 bg-body rounded m-3" @submit="alerta">
-            <h1 class="bd mb-4">Welcome!</h1>
+            <h1 class="bd mb-4">¡Bienvenido!</h1>
             <div class="form-group">
               <label for="username" class="h5 mb-3">Usuario: <input id="username"
               type="text" class="form-control" placeholder="User Name" v-model="username"></label>
@@ -40,6 +40,7 @@ export default ({
     alerta(event) {
       event.preventDefault();
       alert(`${this.username} ${this.password}`);
+      this.$router.push('home');
     },
   },
   computed: {
@@ -59,8 +60,9 @@ export default ({
   100% { opacity: 1; }
 }
 .bg{
-  background-image: url('../assets/loginphoto2.jpg');
+  background-image: url('../assets/loginphoto.jpg');
   background-position: center center;
   background-repeat: no-repeat;
+  height: 45vw;
 }
 </style>
