@@ -1,15 +1,29 @@
 <template>
   <div class="container-fluid">
-    <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom-">
+    <nav class="navbar navbar-expand-md navbar-light bg-light
+    border-bottom shadow-sm p-3 mb-5 bg-body rounded">
       <div class="container-fluid">
-      <router-link to="/home" id="name">💸Wallet</router-link>
-      <button type="button" class="navbar-toggler"
-      data-bs-toggle="collapse" data-bs-target="#MenuNavegacion">
+      <router-link to="/home" class="h4 sintd">💸Wallet</router-link>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+      data-bs-target="#MenuNavegacion">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div id="MenuNavegacion" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-3">
-          <li class="nav-item">Comprar</li>
+          <router-link to="/purchase"><li class="nav-item"><a class="nav-link"
+          href="#">Comprar</a></li></router-link>
+          <router-link to="/sell"><li class="nav-item"><a class="nav-link"
+          href="#">Vender</a></li></router-link>
+          <router-link to="/historial"><li class="nav-item"><a class="nav-link"
+          href="#">Historial</a></li></router-link>
+          <a href="#" class="nav-link dropdown-toggle" role="button"
+          data-bs-toggle="dropdown">Analisis</a>
+          <ul class="dropdown-menu text-center">
+          <router-link to="/analisis/actual"><li class="nav-item"><a class="nav-link"
+          href="#">Analisis actual</a></li></router-link>
+          <router-link to="/analisis/inversiones"><li class="nav-item"><a class="nav-link"
+          href="#">Analisis de inversiones</a></li></router-link>
+          </ul>
         </ul>
       </div>
       </div>
@@ -24,8 +38,14 @@ export default ({
 </script>
 
 <style scoped>
-#wallet{
- text-decoration: none;
+a{
+  text-decoration: none;
+  font-weight: 700;
+}
+.sintd{
+  text-decoration: none;
+  color: black;
+  font-weight: 700;
 }
 
 </style>
