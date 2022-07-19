@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
-    <nav class="navbar navbar-expand-md navbar-light bg-light
-    border-bottom shadow-sm p-3 mb-5 bg-body rounded">
+    <nav class="navbar navbar-expand-md navbar-light bg-lightborder-bottom
+    shadow-sm p-3 mb-5 bg-body rounded">
       <div class="container-fluid">
       <router-link to="/home" class="h4 sintd">💸Wallet</router-link>
       <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
@@ -19,10 +19,10 @@
           <a href="#" class="nav-link dropdown-toggle" role="button"
           data-bs-toggle="dropdown">Analisis</a>
           <ul class="dropdown-menu text-center">
-          <router-link to="/analisis/actual"><li class="nav-item"><a class="nav-link"
-          href="#">Analisis actual</a></li></router-link>
-          <router-link to="/analisis/inversiones"><li class="nav-item"><a class="nav-link"
-          href="#">Analisis de inversiones</a></li></router-link>
+            <router-link to="/analisis/actual"><li class="nav-item"><a class="nav-link"
+            href="#">Analisis actual</a></li></router-link>
+            <router-link to="/analisis/inversiones"><a class="nav-link"
+            href="#">Analisis de inversiones</a></router-link>
           </ul>
         </ul>
       </div>
