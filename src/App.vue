@@ -1,7 +1,17 @@
 <template>
   <router-view></router-view>
+  <FooterPage></FooterPage>
 </template>
 
+<script>
+import FooterPage from '@/components/FooterPage.vue';
+
+export default {
+  components: {
+    FooterPage,
+  },
+};
+</script>
 <style>
 #app {
   font-family:'Roboto', sans-serif;;
