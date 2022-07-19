@@ -6,7 +6,7 @@
       <div class="col-lg-6">
         <div class="login-form fade-in-text">
           <form class="shadow p-3 mb-5 bg-body rounded m-3" @submit="alerta">
-            <h1 class="bd mb-4">¡Bienvenido!</h1>
+            <h1 class="bd my-4 mx-5">💸Wallet</h1>
             <div class="form-group">
               <label for="username" class="h5 mb-3">Usuario: <input id="username"
               type="text" class="form-control" placeholder="User Name" v-model="username"></label>
