@@ -21,8 +21,8 @@ export default ({
 
 <style scoped>
 .load{
-  width: 15rem;
-  height: 15rem;
+  width: 10rem;
+  height: 10rem;
 }
 .first{
   width: 0.75rem;
@@ -41,6 +41,6 @@ export default ({
   height: 2.25rem;
 }
 .mt-3{
-  margin-left: 50px;
+  margin-left: 2em;
 }
 </style>

@@ -12,7 +12,7 @@
             <h3>Vender</h3>
             <h4>${{btc.argenbtc.totalBid}}</h4>
           </div>
-          <h5>Cotizacion: <a href="https://argenbtc.com/">ARGENBTC</a></h5>
+          <h5>Cotización: <a href="https://argenbtc.com/">ARGENBTC</a></h5>
         </div>
       </div>
       <div class="col-12 col-lg-4">
@@ -26,7 +26,7 @@
             <h3>Vender</h3>
             <h4>${{eth.satoshitango.totalBid}}</h4>
           </div>
-          <h5>Cotizacion: <a href="https://www.satoshitango.com/">Satoshi Tango</a></h5>
+          <h5>Cotización: <a href="https://www.satoshitango.com/">Satoshi Tango</a></h5>
         </div>
       </div>
       <div class="col-12 col-lg-4">
@@ -40,7 +40,7 @@
             <h3>Vender</h3>
             <h4>${{usdc.lemoncash.totalBid}}</h4>
           </div>
-          <h5>Cotizacion: <a href="https://www.lemon.me/">Lemon Cash</a></h5>
+          <h5>Cotización: <a href="https://www.lemon.me/">Lemon Cash</a></h5>
         </div>
       </div>
     </div>
