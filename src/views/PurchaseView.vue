@@ -1,7 +1,64 @@
 <template>
   <div>
     <NavBar></NavBar>
-    <h2>Comprar</h2>
+    <h2 class="my-3">Comprar 💲</h2>
+    <div class="container">
+    <form @submit="noRefresh">
+      <select class="form-select text-center mb-3" v-model="coin"
+      aria-label="Default select example" required>
+        <option selected>Elije una moneda</option>
+        <option value="usdc">USDC</option>
+        <option value="btc">Bitcoin</option>
+        <option value="eth">Ethereum</option>
+      </select>
+      <h6 class="text-center">Ingrese el monto que desea comprar</h6>
+      <div class="input-group mb-3">
+        <span class="input-group-text"
+        v-if="coin !== 'Elije una moneda'">{{coin.toUpperCase()}}</span>
+        <span class="input-group-text" v-else>$</span>
+        <input type="text" class="form-control" v-model="amount"
+        aria-label="Amount (to the nearest dollar)"
+        placeholder="Ej: 0.00001">
+      </div>
+      <button type="button" class="btn btn-light border" data-bs-toggle="modal"
+        data-bs-target="#modalCompra" :disabled="isDisabled">
+        Buscar cotización
+      </button>
+    </form>
+    <div class="modal fade" id="modalCompra" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cotización</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>{{coin.toUpperCase()}} {{parseFloat(amount)}}</h4>
+            <h4>Precio final AR${{cotizacion}}</h4>
+            <h5 class="exchange">exchange: {{exchangeUsed}}</h5>
+          </div>
+          <div class="modal-footer mx-5 ">
+            <button type="button" class="btn btn-danger"
+            data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+            @click="comprar">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="alert alert-success alertCompra mt-5 alert-dismissible fade show"
+    role="alert" v-show="compraRealizada">
+      🤑¡Compra exitosa!🤑
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="alert alert-danger alertCompra mt-5 alert-dismissible fade show"
+    role="alert" v-show="!compraRealizada">
+      ❌ERROR❌
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
 </template>
 
@@ -9,14 +66,79 @@
 import NavBar from '@/components/NavBar.vue';
 
 export default {
+  data() {
+    return {
+      coin: 'Elije una moneda',
+      amount: null,
+      terms: false,
+      compraRealizada: null,
+      datetime: '',
+      cotizacion: 0,
+      totalAsk: null,
+    };
+  },
   setup() {
   },
   components: {
     NavBar,
   },
+  created() {
+  },
+  methods: {
+    comprar() {
+      const date = new Date();
+      const fecha = `${(`00${date.getDate()}`).slice(-2)}-${(`00${(date.getMonth() + 1)}`).slice(-2)}-${date.getFullYear()} ${(`00${date.getHours()}`).slice(-2)}:${(`00${date.getMinutes()}`).slice(-2)}`;
+      this.datetime = fecha;
+      this.amount = parseFloat(this.amount);
+      console.log(this.coin);
+      console.log(this.datetime);
+      console.log(parseFloat(this.amount));
+      console.log(this.$store.state.Id);
+      this.compraRealizada = true;
+    },
+    noRefresh(event) {
+      event.preventDefault();
+    },
+  },
+  computed: {
+    isDisabled() {
+      if (this.coin === 'Elije una moneda') {
+        return !this.terms;
+      }
+      if (this.amount === null) {
+        return !this.terms;
+      }
+      if (this.amount === '0') {
+        return !this.terms;
+      }
+      if (this.amount === '') {
+        return !this.terms;
+      }
+      if (parseFloat(this.amount) === 0) {
+        return !this.terms;
+      }
+      return this.terms;
+    },
+    exchangeUsed() {
+      if (this.coin === 'usdc') {
+        return 'Lemon Cash';
+      }
+      if (this.coin === 'btc') {
+        return 'ARGENBTC';
+      }
+      return 'Satoshi Tango';
+    },
+  },
 };
 </script>
 
 <style scoped>
+form{
+  width: 40%;
+  margin: 0 30%;
+}
+.exchange{
+  color: rgb(189, 189, 189);
+}
 
 </style>
