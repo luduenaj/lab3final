@@ -1,12 +1,9 @@
 <template>
 <div class="container my-5">
   <footer class="bg-light text-center">
-  <!-- Grid container -->
   <div class="container p-4 pb-0">
-    <!-- Section: Form -->
-    <section class="">
-      <form action="">
-        <!--Grid row-->
+    <section>
+      <form>
         <div class="row d-flex justify-content-center">
           <strong>💸Wallet</strong>
         </div>
