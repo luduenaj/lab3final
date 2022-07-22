@@ -4,6 +4,8 @@ import LoginView from '../views/LoginView.vue';
 import PurchaseView from '../views/PurchaseView.vue';
 import SellView from '../views/SellView.vue';
 import HistorialView from '../views/HistorialView.vue';
+import AnalisisActualView from '../views/AnalisisActualView.vue';
+import AnalisisInversionView from '../views/AnalisisInversionView.vue';
 
 const routes = [
   {
@@ -30,6 +32,16 @@ const routes = [
     path: '/historial',
     name: 'historial',
     component: HistorialView,
+  },
+  {
+    path: '/analisis/actual',
+    name: 'analisisActual',
+    component: AnalisisActualView,
+  },
+  {
+    path: '/analisis/inversion',
+    name: 'analisisInversion',
+    component: AnalisisInversionView,
   },
 ];
 
