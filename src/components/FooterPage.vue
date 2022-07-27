@@ -10,7 +10,7 @@
       </form>
     </section>
   </div>
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+  <div class="text-center p-3">
     © 2022 Copyright:
     <a class="text-dark" href="https://github.com/luduenaj">Ludueña Joaquín</a>
   </div>
@@ -26,3 +26,9 @@ export default ({
   name: 'FooterPage',
 });
 </script>
+
+<style scoped>
+.text-center .p3{
+background-color: rgba(0, 0, 0, 0.2);
+}
+</style>

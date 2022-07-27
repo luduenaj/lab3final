@@ -2,15 +2,7 @@
   <div class="spinner-border load" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <h2 class="mt-3">Cargando <div class="spinner-grow first" role="status">
-        <span class="visually-hidden">Loading...</span>
-          </div> <div class="spinner-grow second" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div> <div class="spinner-grow third" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div> <div class="spinner-grow fourth" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div></h2>
+      <h2 class="mt-3">Cargando</h2>
 </template>
 
 <script>
@@ -39,8 +31,5 @@ export default ({
 .fourth{
   width: 2.25rem;
   height: 2.25rem;
-}
-.mt-3{
-  margin-left: 2em;
 }
 </style>
