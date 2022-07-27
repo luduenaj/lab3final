@@ -10,6 +10,11 @@ export default {
   components: {
     FooterPage,
   },
+  created() {
+    if (localStorage.getItem('id')) {
+      this.$store.state.Id = localStorage.getItem('id');
+    }
+  },
 };
 </script>
 <style>

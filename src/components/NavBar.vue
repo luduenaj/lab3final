@@ -34,7 +34,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown"
           role="button" data-bs-toggle="dropdown"
-          aria-current="page" href="#">{{this.$store.state.Id.toUpperCase()}}</a>
+          aria-current="page" href="#">{{user}}</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" data-bs-toggle="modal"
             data-bs-target="#cerrarSesionMdl">Cerrar sesion</a>
@@ -68,10 +68,13 @@ export default ({
   name: 'NavBar',
   data() {
     return {
+      user: this.$store.state.Id.toUpperCase(),
     };
   },
   methods: {
     cerrarSesion() {
+      localStorage.removeItem('id');
+      this.$store.state.Id = null;
       this.$router.push('/');
     },
   },
