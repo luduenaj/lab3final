@@ -39,8 +39,11 @@ export default ({
   methods: {
     alerta(event) {
       event.preventDefault();
-      alert(`${this.username} ${this.password}`);
-      this.$router.push('home');
+      if (this.username !== '') {
+        this.$store.state.Id = (this.username).toLowerCase();
+        localStorage.setItem('id', this.$store.state.Id);
+        this.$router.push('home');
+      }
     },
   },
   computed: {

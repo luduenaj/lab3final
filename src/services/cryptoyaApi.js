@@ -11,12 +11,12 @@ const apiClient = axios.create({
 
 export default {
   getBitcoin() {
-    return apiClient.get('btc/ars/1');
+    return apiClient.get('argenbtc/btc/ars/1');
   },
   getEtherum() {
-    return apiClient.get('eth/ars/1');
+    return apiClient.get('satoshitango/eth/ars/1');
   },
   getUSDC() {
-    return apiClient.get('usdc/ars/1');
+    return apiClient.get('lemoncash/usdc/ars/1');
   },
 };
