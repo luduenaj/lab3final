@@ -3,7 +3,8 @@
     <NavBar></NavBar>
     <h2 class="my-3">Vender 🤑</h2>
     <div class="container">
-      <form @submit.prevent="">
+      <CargandoPantalla v-if="respuesta === null"></CargandoPantalla>
+      <form v-else-if="respuesta === true" @submit.prevent="">
         <select class="form-select text-center mb-3" v-model="coin"
         aria-label="Default select example" required>
           <option selected>Elije una moneda</option>
@@ -20,12 +21,17 @@
           aria-label="Amount (to the nearest dollar)"
           placeholder="Ej: 0.00001">
         </div>
-        <h6 class="text-center mb-3">Disponible {{disponibilidad}}</h6>
-        <button type="button" class="btn btn-light border" data-bs-toggle="modal"
+        <h6 class="text-center disponible" @click="maxDisponible"
+        @keydown="maxDisponible">{{disponibilidad}}</h6>
+        <button type="button" class="btn btn-light border mt-3" data-bs-toggle="modal"
           data-bs-target="#modalCompra" :disabled="isDisabled">
           Buscar cotización
         </button>
       </form>
+      <div v-else-if="respuesta === false">
+        <h2 class="mt-3">❌ERROR❌</h2>
+        <h2>Servidor no responde</h2>
+      </div>
       <div class="modal fade" id="modalCompra" tabindex="-1"
       aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -54,14 +60,12 @@
       <div class="alert alert-success alertCompra mt-5 alert-dismissible fade show"
       role="alert" v-show="ventaRealizada">
         💸¡Venta exitosa!💸
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-        @click="this.$router.go()"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       <div class="alert alert-danger alertCompra mt-5 alert-dismissible fade show"
       role="alert" v-show="!ventaRealizada">
         ❌ERROR❌
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-        @click="this.$router.go()"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     </div>
   </div>
@@ -70,6 +74,8 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import cryptoyaApi from '@/services/cryptoyaApi';
+import lab3Api from '@/services/lab3Api';
+import CargandoPantalla from '@/components/CargandoPantalla.vue';
 
 export default {
   data() {
@@ -85,19 +91,28 @@ export default {
       venta: {
         user_id: null, action: 'sale', crypto_code: null, crypto_amount: null, money: null, datetime: null,
       },
-      disponible: { btc: 2, etc: 1, usdc: 3 },
+      disponible: { btc: 0, eth: 0, usdc: 0 },
+      respuesta: null,
+      json: {},
     };
   },
   methods: {
     vender() {
       const date = new Date();
-      const fecha = `${(`00${date.getDate()}`).slice(-2)}-${(`00${(date.getMonth() + 1)}`).slice(-2)}-${date.getFullYear()} ${(`00${date.getHours()}`).slice(-2)}:${(`00${date.getMinutes()}`).slice(-2)}`;
+      const fecha = `${date.getFullYear()}-${(`00${(date.getMonth() + 1)}`).slice(-2)}-${(`00${date.getDate()}`).slice(-2)}T${(`00${date.getHours()}`).slice(-2)}:${(`00${date.getMinutes()}`).slice(-2)}`;
       this.datetime = fecha;
       this.amount = parseFloat(this.amount);
       this.money = this.cotizacionUsada;
       this.objetoVenta();
-      console.log(this.venta);
-      this.ventaRealizada = true;
+      try {
+        lab3Api.postCompraVenta(this.venta);
+        this.ventaRealizada = true;
+      } catch (e) {
+        console.log(e);
+        this.ventaRealizada = false;
+      } finally {
+        this.obtenerDisponibilidades();
+      }
     },
     objetoVenta() {
       this.venta.user_id = this.$store.state.Id;
@@ -108,14 +123,74 @@ export default {
     },
     obtenerPrecio() {
       cryptoyaApi.getBitcoin().then((response) => {
-        this.cotizacion.btc = response.data.totalAsk;
+        this.cotizacion.btc = response.data.totalBid;
       });
       cryptoyaApi.getEtherum().then((response) => {
-        this.cotizacion.eth = response.data.totalAsk;
+        this.cotizacion.eth = response.data.totalBid;
       });
       cryptoyaApi.getUSDC().then((response) => {
-        this.cotizacion.usdc = response.data.totalAsk;
+        this.cotizacion.usdc = response.data.totalBid;
       });
+    },
+    limpiarDisponible() {
+      this.disponible.usdc = 0;
+      this.disponible.eth = 0;
+      this.disponible.btc = 0;
+    },
+    obtenerDisponibilidades() {
+      this.limpiarDisponible();
+      try {
+        lab3Api.getHistorial(this.$store.state.Id).then((response) => {
+          this.json = response.data;
+          this.json.forEach((element) => {
+            if (element.action === 'purchase') {
+              if (element.crypto_code === 'usdc') {
+                this.disponible.usdc += parseFloat(element.crypto_amount);
+              }
+              if (element.crypto_code === 'eth') {
+                this.disponible.eth += parseFloat(element.crypto_amount);
+              }
+              if (element.crypto_code === 'btc') {
+                this.disponible.btc += parseFloat(element.crypto_amount);
+              }
+            }
+            if (element.action === 'sale') {
+              if (element.crypto_code === 'usdc') {
+                this.disponible.usdc -= parseFloat(element.crypto_amount);
+              }
+              if (element.crypto_code === 'eth') {
+                this.disponible.eth -= parseFloat(element.crypto_amount);
+              }
+              if (element.crypto_code === 'btc') {
+                this.disponible.btc -= parseFloat(element.crypto_amount);
+              }
+            }
+          });
+          if (this.disponible.usdc < 0) {
+            this.disponible.usdc = 0;
+          }
+          if (this.disponible.eth < 0) {
+            this.disponible.eth = 0;
+          }
+          if (this.disponible.btc < 0) {
+            this.disponible.btc = 0;
+          }
+          this.respuesta = true;
+        });
+      } catch {
+        this.respuesta = false;
+      }
+    },
+    maxDisponible() {
+      if (this.coin === 'usdc') {
+        this.amount = this.disponible.usdc;
+      }
+      if (this.coin === 'eth') {
+        this.amount = this.disponible.eth;
+      }
+      if (this.coin === 'btc') {
+        this.amount = this.disponible.btc;
+      }
     },
   },
   computed: {
@@ -141,6 +216,16 @@ export default {
       if ((Number.isNaN(parseFloat(this.amount))) === true) {
         return !this.terms;
       }
+      if (this.coin === 'usdc' && parseFloat(this.amount) > this.disponible.usdc) {
+        return !this.terms;
+      }
+      if (this.coin === 'eth' && parseFloat(this.amount) > this.disponible.eth) {
+        return !this.terms;
+      }
+      if (this.coin === 'btc' && parseFloat(this.amount) > this.disponible.btc) {
+        return !this.terms;
+      }
+
       return this.terms;
     },
     exchangeUsed() {
@@ -157,12 +242,24 @@ export default {
         return '';
       }
       if (this.coin === 'usdc') {
-        return this.disponible.usdc;
+        if (this.disponible.usdc === 0) {
+          return 'No disponible para vender😢';
+        }
+        return `Disponible: USDC ${this.disponible.usdc}`;
       }
       if (this.coin === 'btc') {
-        return this.disponible.btc;
+        if (this.disponible.btc === 0) {
+          return 'No disponible para vender😢';
+        }
+        return `Disponible: BTC ${this.disponible.btc}`;
       }
-      return this.disponible.btc;
+      if (this.coin === 'eth') {
+        if (this.disponible.eth === 0) {
+          return 'No disponible para vender😢';
+        }
+        return `Disponible: ETH ${this.disponible.eth}`;
+      }
+      return '❌ERROR❌';
     },
     cotizacionUsada() {
       if (this.coin === 'usdc') {
@@ -179,9 +276,13 @@ export default {
   },
   created() {
     this.obtenerPrecio();
+    this.obtenerDisponibilidades();
+  },
+  beforeMounted() {
   },
   components: {
     NavBar,
+    CargandoPantalla,
   },
 };
 </script>
@@ -202,5 +303,8 @@ input::-webkit-inner-spin-button {
 }
 input[type=number] {
   -moz-appearance: textfield;
+}
+.disponible:hover {
+  color: #85bb65;
 }
 </style>

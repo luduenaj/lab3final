@@ -11,7 +11,7 @@ const apiClient = axios.create({
 });
 
 export default {
-  postCompra(compra) {
+  postCompraVenta(compra) {
     return apiClient.post('/transactions', compra);
   },
   getHistorial(id) {

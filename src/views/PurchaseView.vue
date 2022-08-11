@@ -26,7 +26,7 @@
         </button>
       </form>
       <div class="modal fade" id="modalCompra" tabindex="-1"
-      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      aria-labelledby="Comprar" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -100,7 +100,7 @@ export default {
       console.log(this.compra);
       console.log(this.compra.datetime);
       try {
-        lab3Api.postCompra(this.compra).then((response) => {
+        lab3Api.postCompraVenta(this.compra).then((response) => {
           console.log(response.data);
           this.compraRealizada = true;
         });
@@ -121,7 +121,7 @@ export default {
     },
     objetoCompra() {
       const date = new Date();
-      const fecha = `${(`00${date.getDate()}`).slice(-2)}-${(`00${(date.getMonth() + 1)}`).slice(-2)}-${date.getFullYear()} ${(`00${date.getHours()}`).slice(-2)}:${(`00${date.getMinutes()}`).slice(-2)}`;
+      const fecha = `${date.getFullYear()}-${(`00${(date.getMonth() + 1)}`).slice(-2)}-${(`00${date.getDate()}`).slice(-2)}T${(`00${date.getHours()}`).slice(-2)}:${(`00${date.getMinutes()}`).slice(-2)}`;
       this.datetime = (fecha).toString();
       this.compra.user_id = this.$store.state.Id;
       this.compra.crypto_code = this.coin;
