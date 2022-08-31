@@ -28,13 +28,13 @@
           aria-label="Close"></button>
         </div>
         <div class="modal-body text-center">
-          <h5>Fecha: {{(leer.datetime)}}</h5>
+          <h5>Fecha: {{leer.datetime}}</h5>
           <h5>Usuario: {{leer.user_id}}</h5>
           <h5>Movimiento: {{actionType(leer.action)}}</h5>
           <h5>Moneda: {{leer.crypto_code}}</h5>
           <h5>Monto: {{leer.crypto_amount}}</h5>
           <h5>Precio: AR${{leer.money}}</h5>
-          <h5>Exchange: {{exchange}}</h5>
+          <h5>Exchange: {{exchangeUsed(leer.crypto_code)}}</h5>
         </div>
       </div>
     </div>
@@ -49,9 +49,9 @@
           aria-label="Close"></button>
         </div>
         <div class="modal-body text-center">
-          <label for="crypto_code">Fecha<input v-model="datetimeEditar"
+          <label for="crypto_code">Fecha<input v-model="datetimeEdit"
           type="datetime-local" name="crypto_code"
-          class="form-control text-center mb-2"></label>
+          class="form-control text-center mb-2" disabled></label>
           <br>
           <label for="crypto_code">Usuario
           <input v-model="leer.user_id" type="text" name="crypto_code" class="form-control
@@ -91,13 +91,13 @@
               <option value="BTC">ARGENBTC</option>
             </select>
           </label>
-          <p class="mb-2">(Vinculada a su moneda)</p>
+          <p class="mb-2">(Vinculado a su moneda)</p>
         </div>
         <div class="modal-footer mx-5 ">
           <button type="button" class="btn btn-primary"
           data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-success" data-bs-dismiss="modal"
-          data-bs-toggle="modal" data-bs-target="#modalEditarSiNo" @click="editar">Editar</button>
+          data-bs-toggle="modal" data-bs-target="#modalEditarSiNo">Editar</button>
         </div>
       </div>
     </div>
@@ -128,18 +128,52 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">⚠⚠⚠ Advertencia ⚠⚠⚠</h5>
+          <h5 class="modal-title"
+          id="exampleModalLabel">
+            ¿Seguro que desea editar el movimiento?
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"
           aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <h5>¿Seguro que desea editar el movimiento?</h5>
+          <div class="mb-1" v-if="leer.action !== copyLeer.action">
+            <h5>Fecha</h5>
+            <h5>
+            {{actionType(copyLeer.action)}} ➡ {{actionType(leer.action)}}
+            </h5>
+          </div>
+          <div class="mb-1" v-if="leer.crypto_amount !== copyLeer.crypto_amount">
+            <h5>Monto</h5>
+            <h5>
+            {{copyLeer.crypto_amount}} ➡ {{leer.crypto_amount}}
+            </h5>
+          </div>
+          <div class="mb-1" v-if="leer.crypto_code !== copyLeer.crypto_code">
+            <h5>Moneda</h5>
+            <h5>
+            {{copyLeer.crypto_code}} ➡ {{leer.crypto_code}}
+            </h5>
+          </div>
+          <div class="mb-1" v-if="leer.money !== copyLeer.money">
+            <h5>Precio AR$</h5>
+            <h5>
+            {{copyLeer.money}} ➡ {{leer.money}}
+            </h5>
+          </div>
+          <div class="mb-1" v-if="leer.crypto_code !== copyLeer.crypto_code">
+            <h5>Exchange</h5>
+            <h5>
+            {{exchangeUsed(copyLeer.crypto_code)}} ➡ {{exchangeUsed(leer.crypto_code)}}
+            </h5>
+          </div>
         </div>
         <div class="modal-footer mx-5 ">
           <button type="button" class="btn btn-primary"
           data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-success" data-bs-dismiss="modal"
-          >Editar</button>
+          @click="editarMovimiento">
+            Editar
+          </button>
         </div>
       </div>
     </div>
@@ -173,10 +207,32 @@ export default ({
         datetime: null,
       },
       exchange: null,
-      datetimeEditar: null,
+      datetimeEdit: null,
+      copyLeer: {},
+      editar: {},
     };
   },
   methods: {
+    editarMovimiento() {
+      if (this.copyLeer.crypto_amount !== this.leer.crypto_amount) {
+        this.editar.crypto_amount = this.leer.crypto_amount.toString();
+      }
+      if (this.copyLeer.crypto_code !== this.leer.crypto_code) {
+        this.editar.crypto_code = (this.leer.crypto_code).toLowerCase();
+      }
+      if (this.copyLeer.action !== this.leer.action) {
+        this.editar.action = this.leer.action;
+      }
+      if (this.copyLeer.money !== this.leer.money) {
+        this.editar.money = (this.leer.money).toFixed(2);
+      }
+      //  Desactive eslint por _id
+      // eslint-disable-next-line
+      lab3Api.patchMovimiento(this.leer._id, this.editar).then((response) => {
+        console.log(response);
+        this.$router.go();
+      });
+    },
     eliminar(id) {
       try {
         lab3Api.deleteMovimiento(id).then((response) => {
@@ -190,7 +246,7 @@ export default ({
     },
     llenarLeer(index) {
       //  Desactive eslint por _id
-      /* eslint-disable */
+      // eslint-disable-next-line
       this.leer._id = this.json[index]._id;
       this.leer.crypto_code = this.json[index].crypto_code.toUpperCase();
       this.leer.crypto_amount = this.json[index].crypto_amount;
@@ -199,27 +255,37 @@ export default ({
       this.leer.action = (this.json[index].action);
       this.leer.datetime = this.fecha(this.json[index].datetime);
       this.exchange = this.exchangeUsed(this.json[index].crypto_code);
-      this.datetimeEditar = this.fechaInput(this.json[index].datetime);
-
+      this.datetimeEdit = this.fechaInput(this.json[index].datetime);
+      // Solucion para que copyLeer no sea reactivo con leer
+      // eslint-disable-next-line
+      this.copyLeer = Object.assign({}, this.leer);
     },
   },
   computed: {
     fecha() {
       return (fecha) => {
         const date = new Date(fecha);
-        const hora = `${date.toISOString().split('T')[1]}`;
+        const hour = `${date.toISOString().split('T')[1]}`;
         let datetime = `${date.toISOString().split('T')[0]}`;
         datetime = datetime.split('-').reverse().join('-');
-        return `${datetime} ${hora.substring(0, 5)}`;
+        return `${datetime} ${hour.substring(0, 5)}`;
       };
     },
     fechaInput() {
       return (fecha) => {
         const date = new Date(fecha);
-        const hora = `${date.toISOString().split('T')[1]}`;
+        const hour = `${date.toISOString().split('T')[1]}`;
         let datetime = `${date.toISOString().split('T')[0]}`;
         datetime = datetime.split('-').join('-');
-        return `${datetime} ${hora.substring(0, 5)}`;
+        return `${datetime} ${hour.substring(0, 5)}`;
+      };
+    },
+    fechaEditar() {
+      return (fecha) => {
+        let date = fecha.split(' ')[0];
+        date = date.split('-').reverse().join('-');
+        const hour = fecha.split(' ')[1];
+        return `${date} ${hour}`;
       };
     },
     actionType() {
@@ -233,16 +299,19 @@ export default ({
         return '';
       };
     },
-    exchangeUsed(crypto_code) {
-      return (crypto_code) => {
-        if (crypto_code === 'usdc') {
+    exchangeUsed() {
+      return (cryptoCode) => {
+        if (cryptoCode === 'USDC') {
           return 'Lemon Cash';
         }
-        if (crypto_code === 'btc') {
+        if (cryptoCode === 'BTC') {
           return 'ARGENBTC';
         }
-        return 'Satoshi Tango';
-      }
+        if (cryptoCode === 'ETH') {
+          return 'Satoshi Tango';
+        }
+        return 'Error';
+      };
     },
   },
 });
