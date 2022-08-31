@@ -20,4 +20,7 @@ export default {
   deleteMovimiento(id) {
     return apiClient.delete(`/transactions/${id}`);
   },
+  patchMovimiento(id, editar) {
+    return apiClient.patch(`/transactions/${id}`, editar);
+  },
 };
