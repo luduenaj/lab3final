@@ -32,7 +32,7 @@
       </div>
       <ul class="navbar-nav ml-auto nav-flex-icons me-5">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="navbarDropdown"
+          <a class="nav-link dropdown-toggle user" id="navbarDropdown"
           role="button" data-bs-toggle="dropdown"
           aria-current="page" href="#">{{user}}</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -90,5 +90,10 @@ a{
   text-decoration: none;
   color: black;
   font-weight: 700;
+}
+@media (max-width: 772px) {
+  .user {
+    margin-left: 2vw;
+  }
 }
 </style>
