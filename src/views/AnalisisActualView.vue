@@ -1,7 +1,7 @@
 <template>
   <NavBar></NavBar>
   <h2>Análisis actual💰</h2>
-  <div class="container" v-if="usdcCounter>0">
+  <div class="container" v-if="response">
     <div  class="row">
       <DoughtnutChart class="col-lg-6 col-12"
       :usdcCounter="usdcCounter" :ethCounter="ethCounter"
@@ -13,7 +13,7 @@
       </Analisis>
     </div>
   </div>
-  <CargandoPantalla v-if="usdcCounter === null"></CargandoPantalla>
+  <CargandoPantalla v-else></CargandoPantalla>
 
 </template>
 
@@ -40,6 +40,17 @@ export default {
       ethCounter: null,
       btcCounter: null,
     };
+  },
+  computed: {
+    response() {
+      if (this.price.btc === null || this.price.eth === null || this.price.usdc === null) {
+        return false;
+      }
+      if (this.usdcCounter === null || this.ethCounter === null || this.btcCounter === null) {
+        return false;
+      }
+      return true;
+    },
   },
   created() {
     cryptoyaApi.getBitcoin().then((response) => {
