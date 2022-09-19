@@ -33,9 +33,9 @@ export default ({
     },
   },
   mounted() {
-    const usdc = this.usdcCounter * this.price.usdc;
-    const eth = this.ethCounter * this.price.eth;
-    const btc = this.btcCounter * this.price.btc;
+    const usdc = parseFloat((this.usdcCounter * this.price.usdc).toFixed(2));
+    const eth = parseFloat((this.ethCounter * this.price.eth).toFixed(2));
+    const btc = parseFloat((this.btcCounter * this.price.btc).toFixed(2));
     const ctx = document.getElementById('myChart');
     const data = {
       labels: [
