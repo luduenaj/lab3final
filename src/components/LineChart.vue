@@ -23,12 +23,12 @@ export default ({
     },
   },
   mounted() {
-    const usdcPriceThen = this.priceThen.usdc;
-    const usdcPriceNow = (this.priceNow.usdc * this.counter.usdc);
-    const ethPriceThen = this.priceThen.eth;
-    const ethPriceNow = (this.priceNow.eth * this.counter.eth);
-    const btcPriceThen = this.priceThen.btc;
-    const btcPriceNow = (this.priceNow.btc * this.counter.btc);
+    const usdcPriceThen = parseFloat((this.priceThen.usdc).toFixed(2));
+    const usdcPriceNow = parseFloat((this.priceNow.usdc * this.counter.usdc).toFixed(2));
+    const ethPriceThen = parseFloat(this.priceThen.eth.toFixed(2));
+    const ethPriceNow = parseFloat((this.priceNow.eth * this.counter.eth).toFixed(2));
+    const btcPriceThen = parseFloat((this.priceThen.btc).toFixed(2));
+    const btcPriceNow = parseFloat((this.priceNow.btc * this.counter.btc).toFixed(2));
     const ctx = document.getElementById('lineChart');
     const labels = ['Precio de compra', 'Precio actual'];
     const data = {
