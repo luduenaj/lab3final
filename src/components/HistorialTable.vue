@@ -280,7 +280,6 @@ export default ({
         return `${datetime} ${hour.substring(0, 5)}`;
       };
     },
-    },
     actionType() {
       return (action) => {
         if (action === 'purchase') {
