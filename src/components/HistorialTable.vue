@@ -280,14 +280,6 @@ export default ({
         return `${datetime} ${hour.substring(0, 5)}`;
       };
     },
-    fechaEditar() {
-      return (fecha) => {
-        let date = fecha.split(' ')[0];
-        date = date.split('-').reverse().join('-');
-        const hour = fecha.split(' ')[1];
-        return `${date} ${hour}`;
-      };
-    },
     actionType() {
       return (action) => {
         if (action === 'purchase') {

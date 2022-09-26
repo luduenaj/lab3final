@@ -2,7 +2,12 @@
   <NavBar></NavBar>
   <h2>Análisis actual💰</h2>
   <div class="container" v-if="response">
-    <div  class="row">
+    <div v-if="noCoins" class="my-3">
+      <h1>No se encontraron monedas🧐</h1>
+      <router-link to="/purchase">Compra monedas💲</router-link>
+      <br>
+    </div>
+    <div v-else class="row">
       <DoughtnutChart class="col-lg-6 col-12"
       :usdcCounter="usdcCounter" :ethCounter="ethCounter"
       :btcCounter="btcCounter" :price="price">
@@ -39,6 +44,7 @@ export default {
       usdcCounter: null,
       ethCounter: null,
       btcCounter: null,
+      isLoading: true,
     };
   },
   computed: {
@@ -51,19 +57,29 @@ export default {
       }
       return true;
     },
+    noCoins() {
+      if (this.usdcCounter === 0 && this.ethCounter === 0 && this.btcCounter === 0) {
+        return true;
+      }
+      return false;
+    },
   },
   created() {
     cryptoyaApi.getBitcoin().then((response) => {
       this.price.btc = response.data.totalAsk;
+      this.isLoading = false;
     });
     cryptoyaApi.getEtherum().then((response) => {
       this.price.eth = response.data.totalAsk;
+      this.isLoading = false;
     });
     cryptoyaApi.getUSDC().then((response) => {
       this.price.usdc = response.data.totalAsk;
+      this.isLoading = false;
     });
     lab3Api.getHistorial(this.$store.state.Id).then((response) => {
       const json = response.data;
+      this.isLoading = false;
       json.forEach((movimiento) => {
         if (movimiento.action === 'purchase') {
           if (movimiento.crypto_code === 'usdc') {

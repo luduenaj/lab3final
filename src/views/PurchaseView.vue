@@ -97,11 +97,8 @@ export default {
       this.amount = parseFloat(this.amount);
       this.money = this.cotizacionUsada;
       this.objetoCompra();
-      console.log(this.compra);
-      console.log(this.compra.datetime);
       try {
-        lab3Api.postCompraVenta(this.compra).then((response) => {
-          console.log(response.data);
+        lab3Api.postCompraVenta(this.compra).then(() => {
           this.compraRealizada = true;
         });
       } catch {

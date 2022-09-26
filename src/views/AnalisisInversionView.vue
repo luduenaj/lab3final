@@ -3,7 +3,12 @@
   <h2 class="mb-3">Análisis de inversiones💹</h2>
   <CargandoPantalla v-if="response === false"></CargandoPantalla>
   <div v-else class="container">
-    <div class="row">
+    <div v-if="noCoins">
+      <h1>No se encontraron monedas🧐</h1>
+      <router-link to="/purchase">Compra monedas💲</router-link>
+      <br>
+    </div>
+    <div class="row" v-else>
       <LineChart class="col-12 col-lg-6"
       :counter="counter"
       :priceThen="priceThen"
@@ -60,6 +65,12 @@ export default {
       }
       return true;
     },
+    noCoins() {
+      if (this.counter.usdc === 0 && this.counter.eth === 0 && this.counter.btc === 0) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     getPriceThen() {
@@ -93,17 +104,20 @@ export default {
               this.priceThen.btc -= parseFloat(element.money);
               this.counter.btc -= parseFloat(element.crypto_amount);
             }
-            if (this.counter.btc === null) {
-              this.counter.btc = 0;
-            }
-            if (this.counter.eth === null) {
-              this.counter.eth = 0;
-            }
-            if (this.counter.usdc === null) {
-              this.counter.usdc = 0;
-            }
           }
         });
+        if (this.counter.btc === null) {
+          this.counter.btc = 0;
+          this.priceThen.btc = 0;
+        }
+        if (this.counter.eth === null) {
+          this.counter.eth = 0;
+          this.priceThen.eth = 0;
+        }
+        if (this.counter.usdc === null) {
+          this.counter.usdc = 0;
+          this.priceThen.usdc = 0;
+        }
       });
     },
     getPriceNow() {
