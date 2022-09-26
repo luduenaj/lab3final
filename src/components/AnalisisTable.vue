@@ -8,19 +8,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr  v-if="usdc > 0">
           <td><span class="usdcColor">USDC</span></td>
           <td :class="{ loss: !usdcResultClass, gain: usdcResultClass }">
             ${{usdc.toFixed(2)}}
           </td>
         </tr>
-        <tr>
+        <tr v-if="eth > 0">
           <td><span class="ethColor">Ethereum</span></td>
           <td :class="{ loss: !ethResultClass, gain: ethResultClass }">
             ${{eth.toFixed(2)}}
           </td>
         </tr>
-        <tr>
+        <tr  v-if="btc > 0">
           <td><span class="btcColor">Bitcoin</span></td>
           <td :class="{ loss: !btcResultClass, gain: btcResultClass }">
             ${{btc.toFixed(2)}}

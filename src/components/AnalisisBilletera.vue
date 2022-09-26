@@ -1,9 +1,9 @@
 <template>
 <div>
   <div class="chartBox shadow p-3 mb-5 bg-body rounded">
-    <h2><span class="usdcColor">USDC</span> {{usdcCounter}}</h2><br>
-    <h2><span class="ethColor">Ethereum</span> {{ethCounter}}</h2><br>
-    <h2><span class="btcColor">Bitcoin</span> {{btcCounter}}</h2><br>
+    <h2 v-if="usdcCounter > 0"><span class="usdcColor">USDC</span> {{usdcCounter}}</h2><br>
+    <h2 v-if="ethCounter > 0"><span class="ethColor">Ethereum</span> {{ethCounter}}</h2><br>
+    <h2 v-if="btcCounter > 0"><span class="btcColor">Bitcoin</span> {{btcCounter}}</h2><br>
     <h2><span class="darkGreen">Total</span> AR${{total}}</h2>
   </div>
 </div>
